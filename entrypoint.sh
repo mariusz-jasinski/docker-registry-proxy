@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 echo "Entrypoint starting."
 
@@ -63,12 +63,15 @@ if [ -n "$REWRITED_DEFAULT_REGISTRY" ]; then
 	echo "if (\$targetHost ~* docker.io) {" >> /etc/nginx/nginx.proxypass.conf
 	echo "  set \$targetHost ${REWRITED_DEFAULT_REGISTRY};" >> /etc/nginx/nginx.proxypass.conf
 	echo "} " >> /etc/nginx/nginx.proxypass.conf
-	# echo "set \$host \$targetHost;" >> /etc/nginx/nginx.proxypass.conf
-	# echo "proxy_set_header Host \$targetHost;" >> /etc/nginx/nginx.proxypass.conf
+	#echo "proxy_set_header Host \$targetHost;" >> /etc/nginx/nginx.proxypass.conf
+	#echo "proxy_set_header x-real-ip \$proxy_add_x_forwarded_for;" >> /etc/nginx/nginx.proxypass.conf
+	#echo "proxy_set_header x-remote-ip \$remote_addr;" >> /etc/nginx/nginx.proxypass.conf
 	echo "proxy_pass https://\$targetHost;" >> /etc/nginx/nginx.proxypass.conf
 else
 	echo "proxy_pass https://\$targetHost;" >> /etc/nginx/nginx.proxypass.conf
 fi
+echo "set \$proxy_host \$targetHost;" >> /etc/nginx/nginx.proxypass.conf
+
 echo -e "\nHost Proxy_Pass config: ---\n"
 cat /etc/nginx/nginx.proxypass.conf
 echo "---"
