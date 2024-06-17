@@ -59,8 +59,7 @@ EXPOSE 8081
 EXPOSE 8082
 
 ## Default envs.
-# The default registry is docker.io for pulling an image without a specified host. 
-# You can rewrite it with a specified host.
+# Host name to override the default Docker registry.
 ENV REWRITED_DEFAULT_REGISTRY=""
 # A space delimited list of registries we should proxy and cache; this is in addition to the central DockerHub.
 ENV REGISTRIES="k8s.gcr.io gcr.io quay.io"
