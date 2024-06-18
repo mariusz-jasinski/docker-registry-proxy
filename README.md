@@ -109,13 +109,14 @@ ENV PROXY_REQUEST_BUFFERING="true"
 ### Simple (no auth, all cache)
 ```bash
 docker run --rm --name docker_registry_proxy -it \
-       -p 0.0.0.0:3128:3128 -e ENABLE_MANIFEST_CACHE=true \
+       -p 0.0.0.0:3128:3128 \
+       -e ENABLE_MANIFEST_CACHE=true \
        -v $(pwd)/docker_mirror_cache:/docker_mirror_cache \
        -v $(pwd)/docker_mirror_certs:/ca \
        rpardini/docker-registry-proxy:0.6.2
 ```
 
-### DockerHub auth
+### DockerHub auth and full TLS
 
 For Docker Hub authentication:
 - `hostname` should be `auth.docker.io`
@@ -123,12 +124,21 @@ For Docker Hub authentication:
 
 ```bash
 docker run --rm --name docker_registry_proxy -it \
-       -p 0.0.0.0:3128:3128 -e ENABLE_MANIFEST_CACHE=true \
+       -p 0.0.0.0:3128:3128 \
+       -p 0.0.0.0:3129:3129 \
+       -e ENABLE_MANIFEST_CACHE=true \
        -v $(pwd)/docker_mirror_cache:/docker_mirror_cache \
        -v $(pwd)/docker_mirror_certs:/ca \
        -e REGISTRIES="k8s.gcr.io gcr.io quay.io your.own.registry another.public.registry" \
        -e AUTH_REGISTRIES="auth.docker.io:dockerhub_username:dockerhub_password your.own.registry:username:password" \
+       -e CERT_HOSTNAME="$(hostname -s)" \
        rpardini/docker-registry-proxy:0.6.2
+```
+
+Run configuration at docker-client side:
+```bash
+su
+curl -k https://$(hostname -s):3129/setup/systemd | bash
 ```
 
 ### Simple registries auth (HTTP Basic auth)
@@ -151,7 +161,9 @@ For GitLab.com itself the authentication domain should be `gitlab.com`.
 
 ```bash
 docker run  --rm --name docker_registry_proxy -it \
-       -p 0.0.0.0:3128:3128 -e ENABLE_MANIFEST_CACHE=true \
+       -p 0.0.0.0:3128:3128 \
+       -p 0.0.0.0:3129:3129 \
+       -e ENABLE_MANIFEST_CACHE=true \
        -v $(pwd)/docker_mirror_cache:/docker_mirror_cache \
        -v $(pwd)/docker_mirror_certs:/ca \
        -e REGISTRIES="reg.example.com git.example.com" \
@@ -193,7 +205,9 @@ Example joining the _kind_ docker network and using hostname _docker-registry-pr
 ```bash
 docker run --rm --name docker_registry_proxy -it \
        --net kind --hostname docker-registry-proxy \
-       -p 0.0.0.0:3128:3128 -e ENABLE_MANIFEST_CACHE=true \
+       -p 0.0.0.0:3128:3128 \ 
+       -p 0.0.0.0:3129:3129 \
+       -e ENABLE_MANIFEST_CACHE=true \
        -v $(pwd)/docker_mirror_cache:/docker_mirror_cache \
        -v $(pwd)/docker_mirror_certs:/ca \
        rpardini/docker-registry-proxy:0.6.2
@@ -285,7 +299,7 @@ mkdir -p /etc/systemd/system/docker.service.d
 cat << EOD > /etc/systemd/system/docker.service.d/http-proxy.conf
 [Service]
 Environment="HTTP_PROXY=http://192.168.66.72:3128/"
-Environment="HTTPS_PROXY=http://192.168.66.72:3128/"
+Environment="HTTPS_PROXY=http://192.168.66.72:3129/"
 EOD
 
 ### UBUNTU
@@ -297,7 +311,7 @@ update-ca-certificates --fresh
 
 ### CENTOS
 # Get the CA certificate from the proxy and make it a trusted root.
-curl http://192.168.66.72:3128/ca.crt > /etc/pki/ca-trust/source/anchors/docker_registry_proxy.crt
+curl -k https://192.168.66.72:3129/ca.crt > /etc/pki/ca-trust/source/anchors/docker_registry_proxy.crt
 update-ca-trust
 ###
 
@@ -306,6 +320,12 @@ systemctl daemon-reload
 
 # Restart dockerd
 systemctl restart docker.service
+```
+
+You can also run simply like this:
+```bash
+su  # or other root login
+curl -k https://192.168.66.72:3129/setup/systemd | bash
 ```
 
 ## Testing
