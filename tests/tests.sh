@@ -12,7 +12,7 @@ fi
 
 if [ "${ARG:-2}" == "2" ]; then
 	echo ""
-	command="docker pull docker.io/nginx:1.25.1-alpine"
+	command="docker pull docker.io/nginx:1.25.2-alpine"
 	echo "+ $command"
 	$command
 	(( result=$result+$? ))
@@ -20,7 +20,7 @@ fi
 
 if [ "${ARG:-3}" == "3" ]; then
 	echo ""
-	command="docker pull acp/stack-java-node:j11-n18-v1"
+	command="docker pull acp/nginx-simple:1.0"
 	echo "+ $command"
 	$command
 	(( result=$result+$? ))
@@ -29,7 +29,7 @@ fi
 
 if [ "${ARG:-4}" == "4" ]; then
 	echo ""
-	command="docker pull PRIVATE-REGISTRY.COMPANY.pl/acp/stack-java-node:j11-n18-v1"
+	command="docker pull PRIVATE-REGISTRY.COMPANY.pl/acp/nginx-simple:1.1"
 	echo "+ $command"
 	$command
 	(( result=$result+$? ))
