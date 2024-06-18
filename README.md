@@ -3,7 +3,7 @@
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/rpardini/docker-registry-proxy/tags?label=last%20tagged%20release)
 ![Docker Image Size (latest semver)](https://img.shields.io/docker/image-size/rpardini/docker-registry-proxy?sort=semver)
 ![Docker Pulls](https://img.shields.io/docker/pulls/rpardini/docker-registry-proxy)
-## TL,DR
+## docker-registry-proxy
 
 A caching proxy for Docker; allows centralised management of (multiple) registries and their authentication; caches images from *any* registry.
 Caches the potentially huge blob/layer requests (for bandwidth/time savings), and optionally caches manifest requests ("pulls") to avoid rate-limiting.
