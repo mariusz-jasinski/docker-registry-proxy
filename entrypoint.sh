@@ -114,7 +114,8 @@ if [ "$AUTH_REGISTRIES" ]; then
 fi
 
 # create default config for the caching layer to listen on 443.
-echo "        listen 443 ssl default_server;" > /etc/nginx/caching.layer.listen
+#echo "        listen 443 ssl default_server;" > /etc/nginx/caching.layer.listen
+echo "" > /etc/nginx/caching.layer.listen
 echo "error_log  /var/log/nginx/error.log warn;" > /etc/nginx/error.log.debug.warn
 
 # Set Docker Registry cache size, by default, 32 GB ('32g')
