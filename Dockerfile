@@ -67,6 +67,8 @@ ENV REGISTRIES="k8s.gcr.io gcr.io quay.io"
 ENV AUTH_REGISTRIES="some.authenticated.registry:oneuser:onepassword another.registry:user:password"
 # Should we verify upstream's certificates? Default to true.
 ENV VERIFY_SSL="true"
+# The hostname that will be set in the SSL certificate as trusted. By default, this will be 'hostname -s'.
+env CERT_HOSTNAME=""
 # Enable debugging mode; this inserts mitmproxy/mitmweb between the CONNECT proxy and the caching layer
 ENV DEBUG="false"
 # Enable debugging mode; this inserts mitmproxy/mitmweb between the caching layer and DockerHub's registry

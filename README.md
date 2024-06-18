@@ -84,6 +84,7 @@ for this to work it requires inserting a root CA certificate into system trusted
 - Env `ENABLE_MANIFEST_CACHE`, see the section on pull rate limiting.
 - Env `REGISTRIES`: space separated list of registries to cache; no need to include DockerHub, its already done internally.
 - Env `REWRITED_DEFAULT_REGISTRY`: host name to override the default Docker registry, this comes into effect when pulling image without a specified host or pulling image with docker.io.
+- Env `CERT_HOSTNAME`: the hostname that will be set in the SSL certificate as trusted. By default, this will be 'hostname -s'.
 - Env `AUTH_REGISTRIES`: space separated list of `hostname:username:password` authentication info.
   - `hostname`s listed here should be listed in the REGISTRIES environment as well, so they can be intercepted.
 - Env `AUTH_REGISTRIES_DELIMITER` to change the separator between authentication info. By default, a space: "` `". If you use keys that contain spaces (as with Google Cloud Registry), you should update this variable, e.g. setting it to `AUTH_REGISTRIES_DELIMITER=";;;"`. In that case, `AUTH_REGISTRIES` could contain something like `registry1.com:user1:pass1;;;registry2.com:user2:pass2`.
